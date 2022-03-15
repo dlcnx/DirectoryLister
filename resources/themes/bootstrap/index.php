@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<?php 
-header("Content-type: text/html; charset=utf-8"); 
+<?php
+header("Content-type: text/html; charset=utf-8");
+// 获取访问到的网址
 $md_path_all = $lister->getListedPath();
-$suffix_array = explode('.', $_SERVER['HTTP_HOST']);
-$suffix = end($suffix_array);
-$md_path = explode($suffix, $md_path_all);
-if($md_path[1] != ""){
-	$md_path_last = substr($md_path[1], -1);;
-	if($md_path_last != "/"){
-		$md_file = ".".$md_path[1]."/README.html";
-	}else{
-		$md_file = ".".$md_path[1]."README.html";
-	}
+// 匹配获取所在文件夹
+$md_path_reg = preg_match('#(?<=http://|https://).+#', $md_path_all, $md_path_matches);
+$md_path_dir = preg_replace("/" . $_SERVER['HTTP_HOST'] . "/", "", $md_path_matches[0], 1);
+// 生成 readme 文件路径
+if ($md_path_dir == "/") {
+    $md_file = "./README.html";
+} else {
+    $md_file = "." . $md_path_dir . "/README.html";
 }
-if(file_exists($md_file)){
-	$md_text = file_get_contents($md_file);
-}else{
-	$md_text = "";
+// 判断 readme 文件是否存在
+if (file_exists($md_file)) {
+    $md_text = file_get_contents($md_file);
+} else {
+    $md_text = "";
 }
 ?>
 <html>
