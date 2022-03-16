@@ -4,13 +4,12 @@ header("Content-type: text/html; charset=utf-8");
 // 获取访问到的网址
 $md_path_all = $lister->getListedPath();
 // 匹配获取所在文件夹
-$md_path_reg = preg_match('#(?<=http://|https://).+#', $md_path_all, $md_path_matches);
-$md_path_dir = preg_replace("/" . $_SERVER['HTTP_HOST'] . "/", "", $md_path_matches[0], 1);
+$md_path_reg = preg_match('#(?<=dir=).+#', $_SERVER['REQUEST_URI'], $md_path_matches);
 // 生成 readme 文件路径
-if ($md_path_dir == "/") {
-    $md_file = "./README.html";
+if ($md_path_reg) {
+    $md_file = "./" . $md_path_matches[0] . "/README.html";
 } else {
-    $md_file = "." . $md_path_dir . "/README.html";
+    $md_file = "./README.html";
 }
 // 判断 readme 文件是否存在
 if (file_exists($md_file)) {
